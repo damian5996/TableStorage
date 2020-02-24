@@ -1,4 +1,5 @@
-﻿using DataAccess.Repository.Interfaces;
+﻿using ArticleCategoryManager.Commands.CreateArticle;
+using DataAccess.Repository.Interfaces;
 using MediatR;
 using Models;
 using System;
@@ -9,17 +10,23 @@ using System.Threading.Tasks;
 
 namespace ArticleManager.Commands.CreateArticle
 {
-    internal class CreateArticleHandler : Handler, IRequestHandler<CreateArticleCommand, int>
+    internal class CreateArticleHandler : Handler, IRequestHandler<CreateArticleCommand, ResponseDto<int>>
     {
         public CreateArticleHandler(IArticleRepository articleRepository, IArticleCategoryRepository articleCategoryRepository) : base(articleRepository, articleCategoryRepository) { }
 
-        async Task<int> IRequestHandler<CreateArticleCommand, int>.Handle(CreateArticleCommand command, CancellationToken cancellationToken)
+        async Task<ResponseDto<int>> IRequestHandler<CreateArticleCommand, ResponseDto<int>>.Handle(CreateArticleCommand command, CancellationToken cancellationToken)
         {
+            var result = Validate<int>(command);
+            if (result.ErrorOccurred) return result;
+
             var category = await _articleCategoryRepository.Get(command.CategoryId);
+
             if (category == null)
             {
-                throw new Exception("Wrong category id");
+                result.Errors.Add("Category not found.");
+                return result;
             }
+
             var article = new Article
             {
                 Id = command.Id,
@@ -28,8 +35,25 @@ namespace ArticleManager.Commands.CreateArticle
                 Category = category
             };
 
-            return await _articleRepository.CreateAsync(article);
+            result.Object = await _articleRepository.CreateAsync(article);
 
+            return result;
+        }
+
+        private static ResponseDto<T> Validate<T>(CreateArticleCommand command)
+        {
+            var response = new ResponseDto<T>();
+            CreateArticleCommandValidator validator = new CreateArticleCommandValidator();
+
+            var validationResult = validator.Validate(command);
+            if (!validationResult.IsValid)
+            {
+                foreach (var error in validationResult.Errors)
+                {
+                    response.Errors.Add(error.ErrorMessage);
+                }
+            }
+            return response;
         }
     }
 }

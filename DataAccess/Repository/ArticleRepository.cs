@@ -21,7 +21,7 @@ namespace DataAccess.Repository
 
         public Task<List<Article>> GetAll()
         {
-            return _dbContext.Articles.ToListAsync();
+            return _dbContext.Articles.Include(a => a.Category).ToListAsync();
         }
 
         public Task<Article> Get(int id)

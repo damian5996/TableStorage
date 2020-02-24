@@ -10,22 +10,24 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
+using Models.Entities;
 
 namespace ArticleManager.Queries.GetAllArticles
 {
-    internal class GetAllArticlesHandler : Handler, IRequestHandler<GetAllArticlesQuery, GetAllArticlesViewModel>
+    internal class GetAllArticlesHandler : Handler, IRequestHandler<GetAllArticlesQuery, ResponseDto<GetAllArticlesViewModel>>
     {
         public GetAllArticlesHandler(IArticleRepository articleRepository) : base(articleRepository) { }
 
-        async Task<GetAllArticlesViewModel> IRequestHandler<GetAllArticlesQuery, GetAllArticlesViewModel>.Handle(GetAllArticlesQuery getArticlesQuery, CancellationToken cancellationToken)
+        async Task<ResponseDto<GetAllArticlesViewModel>> IRequestHandler<GetAllArticlesQuery, ResponseDto<GetAllArticlesViewModel>>.Handle(GetAllArticlesQuery getArticlesQuery, CancellationToken cancellationToken)
         {
+            var result = new ResponseDto<GetAllArticlesViewModel>();
             var articlesFromDb = await _articleRepository.GetAll();
-            var result = new GetAllArticlesViewModel {
+            result.Object = new GetAllArticlesViewModel {
                 Articles = articlesFromDb.Select(x => new GetAllArticlesSingleDto() {
                     Id = x.Id,
                     Content = x.Content,
                     Title = x.Title,
-                    Category = new Models.Entities.ArticleCategory() { Id = x.Category.Id, Name = x.Category.Name}
+                    Category = new ArticleCategory() { Id = x.Category.Id, Name = x.Category.Name}
                 }).ToList()
             };
 

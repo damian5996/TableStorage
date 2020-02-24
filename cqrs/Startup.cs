@@ -3,13 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using ArticleCategoryManager.Commands.CreateArticle;
+using ArticleCategoryManager.Commands.CreateArticleCategory;
 using ArticleCategoryManagerConfig;
 using ArticleManager;
+using ArticleManager.Commands.CreateArticle;
 using ArticleManager.Queries.GetArticle;
 using DataAccess.Configuration;
 using DataAccess.Data;
 using DataAccess.Repository;
 using DataAccess.Repository.Interfaces;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -18,6 +23,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Models;
 
 namespace cqrs
 {
@@ -34,6 +40,7 @@ namespace cqrs
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddMvc().AddFluentValidation();
 
             services.AddArticleManagerConfig();
             services.AddArticleCategoryManagerConfig();
@@ -44,6 +51,8 @@ namespace cqrs
 
             services.AddScoped(typeof(IArticleRepository), typeof(ArticleRepository));
             services.AddScoped(typeof(IArticleCategoryRepository), typeof(ArticleCategoryRepository));
+
+            services.AddTransient<IValidator<CreateArticleCommand>, CreateArticleCommandValidator>();
 
         }
 

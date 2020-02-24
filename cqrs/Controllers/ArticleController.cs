@@ -3,6 +3,7 @@ using ArticleManager.Queries.GetAllArticles;
 using ArticleManager.Queries.GetArticle;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Models;
 using System.Threading.Tasks;
 
 namespace cqrs.Controllers
@@ -18,9 +19,10 @@ namespace cqrs.Controllers
         }
 
         [HttpGet()]
-        public async Task<GetAllArticlesViewModel> GetAllArticles(GetAllArticlesQuery query)
+        public async Task<IActionResult> GetAllArticles(GetAllArticlesQuery query)
         {
-            return await _mediator.Send(query);
+            var result = await _mediator.Send(query);
+            return Ok(result);
         }
 
         [HttpGet("{id}")]

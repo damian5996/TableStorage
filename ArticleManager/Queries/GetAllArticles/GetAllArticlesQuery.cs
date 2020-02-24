@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ArticleManager.Queries.GetAllArticles
 {
-    public class GetAllArticlesQuery : IRequest<GetAllArticlesViewModel>
+    public class GetAllArticlesQuery : IRequest<ResponseDto<GetAllArticlesViewModel>>
     {
     }
 }
