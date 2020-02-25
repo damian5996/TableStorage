@@ -22,19 +22,26 @@ namespace cqrs.Controllers
         public async Task<IActionResult> GetAllArticles(GetAllArticlesQuery query)
         {
             var result = await _mediator.Send(query);
+            if (result.ErrorOccurred) return BadRequest(result);
+
             return Ok(result);
         }
 
         [HttpGet("{id}")]
-        public async Task<GetArticleViewModel> GetArticle([FromRoute] GetArticleQuery query)
+        public async Task<IActionResult> GetArticle([FromRoute] GetArticleQuery query)
         {
-            return await _mediator.Send(query);
+            var result = await _mediator.Send(query);
+            if (result.ErrorOccurred) return BadRequest(result);
+
+            return Ok(result);
         }
 
         [HttpPost()]
         public async Task<IActionResult> CreateArticle([FromBody] CreateArticleCommand command)
         {
             var result = await _mediator.Send(command);
+            if (result.ErrorOccurred) return BadRequest(result);
+
             return Ok(result);
         }
 

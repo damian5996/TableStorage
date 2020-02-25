@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ArticleCategoryManager.Queries.GetAllArticleCategories
 {
-    public class GetAllArticleCategoriesQuery : IRequest<GetAllArticleCategoriesViewModel>
+    public class GetAllArticleCategoriesQuery : IRequest<ResponseDto<GetAllArticleCategoriesViewModel>>
     {
     }
 }

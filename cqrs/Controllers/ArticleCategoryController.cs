@@ -21,21 +21,29 @@ namespace cqrs.Controllers
         }
 
         [HttpGet]
-        public async Task<GetAllArticleCategoriesViewModel> GetAllCategories(GetAllArticleCategoriesQuery query)
+        public async Task<IActionResult> GetAllCategories(GetAllArticleCategoriesQuery query)
         {
-            return await _mediator.Send(query);
+            var result = await _mediator.Send(query);
+            if (result.ErrorOccurred) return BadRequest(result);
+
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
-        public async Task<GetArticleCategoryViewModel> GetCategory(GetArticleCategoryQuery query)
+        public async Task<IActionResult> GetCategory(GetArticleCategoryQuery query)
         {
-            return await _mediator.Send(query);
+            var result = await _mediator.Send(query);
+            if (result.ErrorOccurred) return BadRequest(result);
+
+            return Ok(result);
         }
 
         [HttpPost()]
         public async Task<IActionResult> CreateArticleCategory([FromBody] CreateArticleCategoryCommand command)
         {
             var result = await _mediator.Send(command);
+            if (result.ErrorOccurred) return BadRequest(result);
+
             return Ok(result);
         }
     }

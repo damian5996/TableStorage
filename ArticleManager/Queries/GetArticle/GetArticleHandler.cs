@@ -12,14 +12,15 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ArticleManager.Queries.GetArticle
 {
-    internal class GetArticleHandler : Handler, IRequestHandler<GetArticleQuery, GetArticleViewModel>
+    internal class GetArticleHandler : Handler, IRequestHandler<GetArticleQuery, ResponseDto<GetArticleViewModel>>
     {
         public GetArticleHandler(IArticleRepository articleRepository) : base(articleRepository) { }
 
-        Task<GetArticleViewModel> IRequestHandler<GetArticleQuery, GetArticleViewModel>.Handle(GetArticleQuery getArticleQuery, CancellationToken cancellationToken)
+        async Task<ResponseDto<GetArticleViewModel>> IRequestHandler<GetArticleQuery, ResponseDto<GetArticleViewModel>>.Handle(GetArticleQuery getArticleQuery, CancellationToken cancellationToken)
         {
-            var articleFromDb = _articleRepository.Get(getArticleQuery.Id).Result;
-            var result = new GetArticleViewModel()
+            var result = new ResponseDto<GetArticleViewModel>();
+            var articleFromDb = await _articleRepository.Get(getArticleQuery.Id);
+            result.Object = new GetArticleViewModel()
             {
                 Id = articleFromDb.Id,
                 Content = articleFromDb.Content,
@@ -27,7 +28,7 @@ namespace ArticleManager.Queries.GetArticle
                 Category = articleFromDb.Category
             };
 
-            return Task.FromResult(result);
+            return result;
             
         }
     }
