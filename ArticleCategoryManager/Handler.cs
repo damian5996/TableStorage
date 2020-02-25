@@ -1,11 +1,12 @@
 ﻿using DataAccess.Repository.Interfaces;
+using Shared;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace ArticleCategoryManager
 {
-    internal class Handler
+    internal class Handler : Validator
     {
         private protected readonly IArticleCategoryRepository _articleCategoryRepository;
 

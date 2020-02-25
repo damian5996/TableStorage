@@ -16,7 +16,7 @@ namespace ArticleManager.Commands.CreateArticle
 
         async Task<ResponseDto<int>> IRequestHandler<CreateArticleCommand, ResponseDto<int>>.Handle(CreateArticleCommand command, CancellationToken cancellationToken)
         {
-            var result = Validate<int>(command);
+            var result = Validate<int, CreateArticleCommandValidator, CreateArticleCommand>(command);
             if (result.ErrorOccurred) return result;
 
             var category = await _articleCategoryRepository.Get(command.CategoryId);
@@ -38,22 +38,6 @@ namespace ArticleManager.Commands.CreateArticle
             result.Object = await _articleRepository.CreateAsync(article);
 
             return result;
-        }
-
-        private static ResponseDto<T> Validate<T>(CreateArticleCommand command)
-        {
-            var response = new ResponseDto<T>();
-            CreateArticleCommandValidator validator = new CreateArticleCommandValidator();
-
-            var validationResult = validator.Validate(command);
-            if (!validationResult.IsValid)
-            {
-                foreach (var error in validationResult.Errors)
-                {
-                    response.Errors.Add(error.ErrorMessage);
-                }
-            }
-            return response;
         }
     }
 }
