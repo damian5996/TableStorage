@@ -17,7 +17,8 @@ namespace ArticleManager.Commands.CreateArticle
         async Task<ResponseDto<int>> IRequestHandler<CreateArticleCommand, ResponseDto<int>>.Handle(CreateArticleCommand command, CancellationToken cancellationToken)
         {
             var result = Validate<int, CreateArticleCommandValidator, CreateArticleCommand>(command);
-            if (result.ErrorOccurred) return result;
+            if (result.ErrorOccurred) 
+                return result;
 
             var category = await _articleCategoryRepository.Get(command.CategoryId);
 
