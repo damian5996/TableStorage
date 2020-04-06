@@ -11,27 +11,27 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using Models.Entities;
+using DataAccess.TableStorageRepository.Interfaces;
 
 namespace ArticleManager.Queries.GetAllArticles
 {
     internal class GetAllArticlesHandler : Handler, IRequestHandler<GetAllArticlesQuery, ResponseDto<GetAllArticlesViewModel>>
     {
-        public GetAllArticlesHandler(IArticleRepository articleRepository) : base(articleRepository) { }
+        public GetAllArticlesHandler(IArticleRepository articleRepository, IArticleTableStorageRepository articleStorageRepository) : base(articleRepository, articleStorageRepository) { }
 
-        async Task<ResponseDto<GetAllArticlesViewModel>> IRequestHandler<GetAllArticlesQuery, ResponseDto<GetAllArticlesViewModel>>.Handle(GetAllArticlesQuery getArticlesQuery, CancellationToken cancellationToken)
+        Task<ResponseDto<GetAllArticlesViewModel>> IRequestHandler<GetAllArticlesQuery, ResponseDto<GetAllArticlesViewModel>>.Handle(GetAllArticlesQuery getArticlesQuery, CancellationToken cancellationToken)
         {
             var result = new ResponseDto<GetAllArticlesViewModel>();
-            var articlesFromDb = await _articleRepository.GetAll();
+            var articlesFromDb = _articleTableStorageRepository.GetAllFromStorage();
             result.Object = new GetAllArticlesViewModel {
                 Articles = articlesFromDb.Select(x => new GetAllArticlesSingleDto() {
-                    Id = x.Id,
                     Content = x.Content,
-                    Title = x.Title,
-                    Category = new ArticleCategory() { Id = x.Category.Id, Name = x.Category.Name}
+                    Title = x.Title
+                    //Category = new ArticleCategory() { Id = x.Category.Id, Name = x.Category.Name}
                 }).ToList()
             };
 
-            return result;
+            return Task.FromResult(result);
             
         }
     }

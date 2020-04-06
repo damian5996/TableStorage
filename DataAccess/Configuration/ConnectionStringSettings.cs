@@ -7,5 +7,6 @@ namespace DataAccess.Configuration
     public class ConnectionStringSettings
     {
         public string LocalDB { get; set; }
+        public string AzureTableStorage { get; set; }
     }
 }

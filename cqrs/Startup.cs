@@ -13,6 +13,8 @@ using DataAccess.Configuration;
 using DataAccess.Data;
 using DataAccess.Repository;
 using DataAccess.Repository.Interfaces;
+using DataAccess.TableStorageRepository;
+using DataAccess.TableStorageRepository.Interfaces;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using MediatR;
@@ -51,6 +53,8 @@ namespace cqrs
 
             services.AddScoped(typeof(IArticleRepository), typeof(ArticleRepository));
             services.AddScoped(typeof(IArticleCategoryRepository), typeof(ArticleCategoryRepository));
+
+            services.AddScoped(typeof(IArticleTableStorageRepository), typeof(ArticleTableStorageRepository));
 
             services.AddTransient<IValidator<CreateArticleCommand>, CreateArticleCommandValidator>();
 
