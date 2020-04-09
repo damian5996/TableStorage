@@ -12,7 +12,7 @@ namespace DataAccess.TableStorageRepository
     public class ArticleTableStorageRepository : IArticleTableStorageRepository
     {
         private readonly ConnectionStringSettings _connectionStringSettings;
-        private CloudTable _articleTable = null;
+        private CloudTable _articleTable;
 
         public ArticleTableStorageRepository(IOptions<ConnectionStringSettings> accessor)
         {
