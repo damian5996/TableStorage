@@ -7,6 +7,7 @@ namespace ArticleManager.Queries.GetAllArticles
 {
     public class GetAllArticlesSingleDto
     {
+        public string PartitionKey { get; set; }
         public string RowKey { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }

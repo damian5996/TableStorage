@@ -8,6 +8,7 @@ namespace ArticleManager.Queries.GetArticle
 {
     public class GetArticleQuery : IRequest<ResponseDto<GetArticleViewModel>>
     {
-        public int Id { get; set; }
+        public string PartitionKey { get; set; }
+        public string RowKey { get; set; }
     }
 }

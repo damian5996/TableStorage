@@ -25,10 +25,10 @@ namespace ArticleManager.Queries.GetAllArticles
             var articlesFromDb = _articleTableStorageRepository.GetAllFromStorage();
             result.Object = new GetAllArticlesViewModel {
                 Articles = articlesFromDb.Select(x => new GetAllArticlesSingleDto() {
+                    PartitionKey = x.PartitionKey,
                     RowKey = x.RowKey,
                     Content = x.Content,
                     Title = x.Title
-                    //Category = new ArticleCategory() { Id = x.Category.Id, Name = x.Category.Name}
                 }).ToList()
             };
 

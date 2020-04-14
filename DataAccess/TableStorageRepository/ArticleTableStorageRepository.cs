@@ -6,6 +6,7 @@ using Models.TableEntities;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DataAccess.TableStorageRepository
 {
@@ -26,6 +27,13 @@ namespace DataAccess.TableStorageRepository
             var query = new TableQuery<ArticleTableEntity>();
             var entities = _articleTable.ExecuteQuery(query);
             return entities;
+        }
+
+        public async Task<ArticleTableEntity> GetOneFromStorage(string partitionKey, string rowKey)
+        {
+            var operation = TableOperation.Retrieve<ArticleTableEntity>(partitionKey, rowKey);
+            var tableResult = await _articleTable.ExecuteAsync(operation);
+            return tableResult.Result as ArticleTableEntity;
         }
     }
 }

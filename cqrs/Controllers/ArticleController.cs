@@ -27,7 +27,7 @@ namespace cqrs.Controllers
             return Ok(result);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{PartitionKey}/{RowKey}")]
         public async Task<IActionResult> GetArticle([FromRoute] GetArticleQuery query)
         {
             var result = await _mediator.Send(query);

@@ -9,23 +9,29 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using DataAccess.TableStorageRepository.Interfaces;
 
 namespace ArticleManager.Queries.GetArticle
 {
     internal class GetArticleHandler : Handler, IRequestHandler<GetArticleQuery, ResponseDto<GetArticleViewModel>>
     {
-        public GetArticleHandler(IArticleRepository articleRepository) : base(articleRepository) { }
+        public GetArticleHandler(IArticleRepository articleRepository, IArticleTableStorageRepository articleStorageRepository) : base(articleRepository, articleStorageRepository) { }
 
         async Task<ResponseDto<GetArticleViewModel>> IRequestHandler<GetArticleQuery, ResponseDto<GetArticleViewModel>>.Handle(GetArticleQuery getArticleQuery, CancellationToken cancellationToken)
         {
             var result = new ResponseDto<GetArticleViewModel>();
-            var articleFromDb = await _articleRepository.Get(getArticleQuery.Id);
+            var articleFromDb = await _articleTableStorageRepository.GetOneFromStorage(getArticleQuery.PartitionKey, getArticleQuery.RowKey);
+            if(articleFromDb == null)
+            {
+                result.Errors.Add("Article not found");
+                return result;
+            }
             result.Object = new GetArticleViewModel()
             {
-                Id = articleFromDb.Id,
+                PartitionKey = articleFromDb.PartitionKey,
+                RowKey = articleFromDb.RowKey,
                 Content = articleFromDb.Content,
-                Title = articleFromDb.Title,
-                Category = articleFromDb.Category
+                Title = articleFromDb.Title
             };
 
             return result;
