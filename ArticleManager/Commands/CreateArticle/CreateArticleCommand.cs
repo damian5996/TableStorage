@@ -8,9 +8,10 @@ using System.Text;
 
 namespace ArticleManager.Commands.CreateArticle
 {
-    public class CreateArticleCommand : IRequest<ResponseDto<int>>
+    public class CreateArticleCommand : IRequest<ResponseDto<string>>
     {
-        public int Id { get; set; }
+        public string PartitionKey { get; set; }
+        public string RowKey { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
         public int CategoryId { get; set; }

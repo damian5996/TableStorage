@@ -11,8 +11,6 @@ namespace ArticleCategoryManager.Commands.CreateArticle
     {
         public CreateArticleCommandValidator()
         {
-            RuleFor(x => x.Id).NotNull();
-            RuleFor(x => x.CategoryId).NotEqual(0);
             RuleFor(x => x.Title).Length(1,10);
         }
     }

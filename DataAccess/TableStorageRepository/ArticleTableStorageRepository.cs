@@ -35,5 +35,12 @@ namespace DataAccess.TableStorageRepository
             var tableResult = await _articleTable.ExecuteAsync(operation);
             return tableResult.Result as ArticleTableEntity;
         }
+
+        public async Task<string> Create(ArticleTableEntity entity)
+        {
+            var operation = TableOperation.Insert(entity);
+            var tableResult = await _articleTable.ExecuteAsync(operation);
+            return (tableResult.Result as ArticleTableEntity).RowKey;
+        }
     }
 }

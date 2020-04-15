@@ -28,5 +28,10 @@ namespace ArticleManager
         {
             _articleCategoryRepository = articleCategoryRepository;
         }
+
+        private protected Handler(IArticleRepository articleRepository, IArticleCategoryRepository articleCategoryRepository, IArticleTableStorageRepository articleTableStorageRepository) : this(articleRepository, articleTableStorageRepository)
+        {
+            _articleCategoryRepository = articleCategoryRepository;
+        }
     }
 }

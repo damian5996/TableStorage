@@ -10,5 +10,6 @@ namespace DataAccess.TableStorageRepository.Interfaces
     {
         IEnumerable<ArticleTableEntity> GetAllFromStorage();
         Task<ArticleTableEntity> GetOneFromStorage(string partitionKey, string rowKey);
+        Task<string> Create(ArticleTableEntity entity);
     }
 }
